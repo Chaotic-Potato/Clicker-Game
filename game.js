@@ -1,24 +1,31 @@
 var Game = {
   const TICK_RATE = 60,
   tick: function() {
-    gameState.goldTick()
-  }
+    this.goldTick()
+  },
+  goldTick = function() {
+    gameState.changeGold(gameState.getGps() / this.tickRate)
+  },
 }
 
 gameState = function(){
+  //Private
   this.gold = 0
+  //Public
   changeGold = function(dGold){
     this.gold += dGold
-  },
-  goldTick = function() {
-    this.changeGold(this.getGps() / game.tickRate)
   },
   getGps = function() {
     return 0
   }
-  return {changeGold}
+  getGold = function(){
+    return this.gold
+  }
+  return {changeGold,getGold}
 }()
  
-mainButtonClick = function(){
-  gameState.gold++
+document.getElementById("mainButton").onclick = function(){
+  gameState.changeGold(1)
 }
+
+
