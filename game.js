@@ -1,31 +1,47 @@
+get = function(id) {return document.getElementById(id)}
+
 var Game = {
   TICK_RATE: 60,
   tick: function() {
-    this.goldTick()
+   Game.goldTick()
+   Render.tick()
   },
   goldTick: function() {
-    gameState.changeGold(gameState.getGps() / this.tickRate)
+    gameState.changeGold(gameState.getGps() / Game.TICK_RATE)
+  }
+}
+
+var Render = {
+  tick: function() {
+    Render.updateGold()
+  },
+  updateGold: function() {
+    Render.changeText("gold", gameState.getGold())
+    Render.changeText("gps", gameState.getGps())
+  },
+  changeText: function(id, txt) {
+    get(id).textContent = txt
   }
 }
 
 gameState = function(){
   //Private
-  this.gold = 0
+  var gold = 0	
   //Public
   changeGold = function(dGold){
-    this.gold += dGold
-  },
+    gold += dGold
+  }
   getGps = function() {
     return 0
   }
   getGold = function(){
-    return this.gold
+    return gold
   }
-  return {changeGold,getGold}
+  return {changeGold,getGps,getGold}
 }()
  
-document.getElementById("mainButton").onclick = function(){
+get("mainButton").onclick = function(){
   gameState.changeGold(1)
 }
 
-
+Game.loop = setInterval(Game.tick, 1000 / Game.TICK_RATE)
