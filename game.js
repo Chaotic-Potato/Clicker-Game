@@ -1,11 +1,11 @@
 var Game = {
-  const TICK_RATE = 60,
+  TICK_RATE: 60,
   tick: function() {
     this.goldTick()
   },
-  goldTick = function() {
+  goldTick: function() {
     gameState.changeGold(gameState.getGps() / this.tickRate)
-  },
+  }
 }
 
 gameState = function(){
