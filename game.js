@@ -1,11 +1,18 @@
 gameState = function(){
+  //Private
   this.gold = 0
+  //Public
   changeGold = function(dGold){
     this.gold += dGold
   }
-  return {changeGold}
+  getGold = function(){
+    return this.gold
+  }
+  return {changeGold,getGold}
 }()
  
-mainButtonClick = function(){
-  gameState.gold++
+document.getElementById("mainButton").onclick = function(){
+  gameState.changeGold(1)
 }
+
+
