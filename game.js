@@ -41,7 +41,7 @@ var Game = {
   },
   decode: function() {
     if (document.cookie != "") {
-      var c = atob(document.cookie.split("c=")[1])
+      var c = atob(document.cookie.split(";")[0].split("c=")[1])
       var g = c.split("*")[0].split(",")
       var b = c.split("*")[1].split(",")
       gameState.cookie(g)
