@@ -3,12 +3,19 @@ get = function(id) {return document.getElementById(id)}
 var Game = {
   TICK_RATE: 60,
   PRICE_EXP: 1.1,
+  buyAmount: 1,
   tick: function() {
    Game.goldTick()
    Render.tick()
   },
   goldTick: function() {
     gameState.changeGold(gameState.getGps() / Game.TICK_RATE)
+  },
+  getBuyAmount: function() {
+    return Game.buyAmount
+  },
+  setBuyAmount: function(a) {
+    Game.buyAmount = a
   }
 }
 
@@ -26,10 +33,15 @@ building.prototype = {
   getGps: function() {
     return this.rate * this.amount
   },
-  buy: function() {
-    if (gameState.buy(this.getPrice())) {
-      this.amount += 1
-    }
+  buy: function(a) {
+    for (var i = 0; i < a; i++) {
+      if (gameState.buy(this.getPrice())) {
+        this.amount += 1
+      }
+	  else {
+	    return
+	  }
+	}
   }
 }
 
@@ -108,13 +120,14 @@ var Render = {
   init: function() {
     for (i in Building.buildings) {
       get("buyButtons").innerHTML +=
-      "<tr><th><button onclick=Building.buildings[" + i + "].buy()>Buy " + Building.buildings[i].name + "</button></th><th><span id=buildingAmount" + i +"></span></th><th><span id=buildingPrice" + i +"></span></th></tr>"
+      "<tr><th><button onclick=Building.buildings[" + i + "].buy(Game.getBuyAmount())>Buy " + Building.buildings[i].name + "</button></th><th><span id=buildingAmount" + i +"></span></th><th><span id=buildingPrice" + i +"></span></th></tr>"
     }
   },
   tick: function() {
     Render.updateGold()
     Render.updateBuilding()
     Render.updateMagic()
+    Render.updateBuyAmount()
   },
   updateGold: function() {
     Render.changeText("gold", Render.formatNum(gameState.getGold()) + " gold")
@@ -129,6 +142,9 @@ var Render = {
   updateMagic: function() {
     Render.changeText("magic", Render.formatNum(gameState.getMagic()) + " magic nuggets")
     Render.changeText("sellAll", "Sell All For: " + Render.formatNum(gameState.calcMagic() - gameState.getMagic()) + " magic nuggets")
+  },
+  updateBuyAmount: function() {
+    Render.changeText("buyAmount", "Buy Amount: " + Game.getBuyAmount())  
   },
   formatNum: function(num) {
     var exp = ["M","B","T","q","Q","s","S","O","N","d","U","D"]
@@ -146,7 +162,12 @@ var Render = {
     }
   },
   changeText: function(id, txt) {
-    get(id).textContent = txt
+    if (get(id) != undefined) {
+      get(id).textContent = txt
+    }
+    else {
+      console.error("Tried to change text of invalid element: " + id)
+    }
   }
 }
 

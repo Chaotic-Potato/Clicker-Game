@@ -7,7 +7,17 @@
 	<span id="gold">0 gold</span><br>
 	<span id="gps">0 gps</span><br>
 	<span id="magic">0 magic nuggets</span><br>
-	<button id="mainButton">Gold Nugget</button>
+	<button id="mainButton">Gold Nugget</button><br><br>
+	<span id="buyAmount">Buy Amount: 1</span>
+	<table>
+		<tr>
+			<th><button onclick="Game.setBuyAmount(1)">Buy 1</button></th>
+			<th><button onclick="Game.setBuyAmount(5)">Buy 5</button></th>
+			<th><button onclick="Game.setBuyAmount(10)">Buy 10</button></th>
+			<th><button onclick="Game.setBuyAmount(25)">Buy 25</button></th>
+			<th><button onclick="Game.setBuyAmount(100)">Buy 100</button></th>
+		</tr>
+	</table>
 	<button id="sellAll">Sell All For: 0 magic nuggets</button>
 	<table id="buyButtons">
 		<tr>
