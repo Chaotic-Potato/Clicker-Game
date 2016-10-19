@@ -145,7 +145,7 @@ gameState = function(){
     return totalGold
   }
   calcMagic = function() {
-    return Math.floor(Math.pow(totalGold / 100000000, 1/3))
+    return Math.floor(Math.pow(totalGold / 1000000, 1/2))
   }
   sellAll = function() {
     Building.restart()
