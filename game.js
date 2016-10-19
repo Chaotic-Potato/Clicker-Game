@@ -2,11 +2,15 @@ get = function(id) {return document.getElementById(id)}
 
 var Game = {
   TICK_RATE: 60,
+  AUTO_SAVE: 60,
   PRICE_EXP: 1.1,
   buyAmount: 1,
+  ticks: 0,
   tick: function() {
    Game.goldTick()
    Render.tick()
+   Game.checkSave()
+   Game.ticks++
   },
   goldTick: function() {
     gameState.changeGold(gameState.getGps() / Game.TICK_RATE)
@@ -16,6 +20,33 @@ var Game = {
   },
   setBuyAmount: function(a) {
     Game.buyAmount = a
+  },
+  checkSave: function() {
+    if (Game.ticks % (Game.TICK_RATE * Game.AUTO_SAVE) == 0) {
+      Game.encode()
+    }
+  },
+  restart: function() {
+    Building.restart()
+    gameState.restart()
+    Game.encode()
+  },
+  encode: function() {
+    var c = ""
+    c += gameState.getGold() + "," + gameState.getTotalGold() + "," + gameState.getMagic() + "*"
+    for (i in Building.buildings) {
+      c += Building.buildings[i].amount + ","
+    }
+    document.cookie = "c=" + btoa(c) + "; expires=Tue, 1 Jan 2030 00:00:00 UTC"
+  },
+  decode: function() {
+    if (document.cookie != "") {
+      var c = atob(document.cookie.split("c=")[1])
+      var g = c.split("*")[0].split(",")
+      var b = c.split("*")[1].split(",")
+      gameState.cookie(g)
+      Building.cookie(b)
+    }
   }
 }
 
@@ -38,10 +69,10 @@ building.prototype = {
       if (gameState.buy(this.getPrice())) {
         this.amount += 1
       }
-	  else {
-	    return
-	  }
-	}
+      else {
+        return
+      }
+    }
   }
 }
 
@@ -74,6 +105,11 @@ var Building = {
     for (i in Building.buildings) {
       Building.buildings[i].amount = 0
     }
+  },
+  cookie: function(a) {
+    for (i in Building.buildings) {
+      Building.buildings[i].amount = parseInt(a[i])
+    }
   }
 }
 
@@ -105,6 +141,9 @@ gameState = function(){
   getMagic = function() {
     return magic
   }
+  getTotalGold = function() {
+    return totalGold
+  }
   calcMagic = function() {
     return Math.floor(Math.pow(totalGold / 100000000, 1/3))
   }
@@ -113,7 +152,17 @@ gameState = function(){
     magic = gameState.calcMagic()
     gold = 0
   }
-  return {changeGold,buy,getGps,getGold,calcMagic,getMagic,sellAll}
+  cookie = function(a) {
+    gold = parseFloat(a[0])
+    totalGold = parseFloat(a[1])
+    magic = parseFloat(a[2])
+  }
+  restart = function() {
+    gold = 0
+    totalGold = 0
+    magic = 0
+  }
+  return {changeGold,buy,getGps,getGold,calcMagic,getMagic,getTotalGold,cookie,sellAll,restart}
 }()
  
 var Render = {
@@ -180,4 +229,6 @@ get("sellAll").onclick = function() {
 }
 
 Game.loop = setInterval(Game.tick, 1000 / Game.TICK_RATE)
+Game.decode()
+
 Render.init()

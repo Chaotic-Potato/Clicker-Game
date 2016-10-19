@@ -2,6 +2,11 @@
 	font-family: "Courier New", sans-serif;
 }
 
+#gold {
+	font-weight: bold;
+	font-size: 24px;
+}
+
 th {
 	border: 1px solid black;
 	margin: 0px;
@@ -11,6 +16,22 @@ th {
 
 table {
 	border: 1px solid black;
+	position: absolute;
+	right: 0px;
+}
+
+#buyButtons {
+	top: 100px;
+}
+
+#buyOptions {
+	top: 50px;
+}
+
+#buyAmount {
+	right: 0px;
+	top: 10px;
+	position: absolute;
 }
 
 th > button {
@@ -18,4 +39,9 @@ th > button {
 	border: 0px;
 	background-color: white;
 	font-weight: bold; 
+}
+
+#stats {
+	text-align: center;
+	border-radius: 5px;
 }

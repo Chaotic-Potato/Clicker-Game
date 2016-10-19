@@ -4,12 +4,16 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-	<span id="gold">0 gold</span><br>
-	<span id="gps">0 gps</span><br>
-	<span id="magic">0 magic nuggets</span><br>
-	<button id="mainButton">Gold Nugget</button><br><br>
+	<div id="stats">
+		<span id="gold">0 gold</span><br>
+		<span id="gps">0 gps</span><br>
+		<span id="magic">0 magic nuggets</span><br>
+		<button id="mainButton">Gold Nugget</button><br><br>
+	</div>
+	<button id="sellAll">Sell All For: 0 magic nuggets</button><br><br>
+        <button onclick="Game.encode()">Save</button><br>
 	<span id="buyAmount">Buy Amount: 1</span>
-	<table>
+	<table id="buyOptions">
 		<tr>
 			<th><button onclick="Game.setBuyAmount(1)">Buy 1</button></th>
 			<th><button onclick="Game.setBuyAmount(5)">Buy 5</button></th>
@@ -18,7 +22,6 @@
 			<th><button onclick="Game.setBuyAmount(100)">Buy 100</button></th>
 		</tr>
 	</table>
-	<button id="sellAll">Sell All For: 0 magic nuggets</button>
 	<table id="buyButtons">
 		<tr>
 			<th><span>Buy</span></th>
@@ -26,6 +29,7 @@
 			<th><span>Cost</span></th>
 		</tr>
 	</table>
+        <button onclick="Game.restart()">Restart</button>
 	<script src="game.js"></script>
   </body>
 </html>
