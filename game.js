@@ -35,13 +35,21 @@ building.prototype = {
 
 var Building = {
   buildings: [
-    new building("Gold Pan", 1, 10),
-    new building("Gold Vien", 4, 100),
-    new building("Mine", 15, 800),
-    new building("Alchemy Lab", 80, 5000),
-    new building("Nuclear Synthesisor", 500, 100000),
-    new building("Muti-verse", 8000, 1200000),
-    new building("Hacks", 133700, 42000000)
+    new building("Gold Pan", 1, 5),
+    new building("Gold Vein", 8, 70),
+    new building("Mine", 60, 1000),
+    new building("Quarry", 500, 12500),
+    new building("Factory", 3500, 180000),
+    new building("Tree Farm", 27000, 2500000),
+    new building("Alchamy Lab", 210000, 33333333),
+    new building("Fusion", 1600000, 450000000),
+    new building("Electic Synthesizer", 12345678, 6400000000),
+    new building("Gold-O-Verse", 100000000, 85000000000),
+    new building("Black Hole Converter", 777777777, 1200000000000),
+    new building("Quantum Nuggets", 5500000000, 16000000000000),
+    new building("Universe Destroyer", 42000000000, 256000000000000),
+    new building("Duplicator", 333333333333, 3333333333333333),
+    new building("Hax", 2100000000000, 42000000000000000)
   ],
   getBaseGps: function() {
     var total = 0
@@ -49,15 +57,25 @@ var Building = {
       total += Building.buildings[i].getGps()
     }
     return total
+  },
+  restart: function() {
+    for (i in Building.buildings) {
+      Building.buildings[i].amount = 0
+    }
   }
 }
 
 gameState = function(){
   //Private
-  var gold = 0	
+  var gold = 0
+  var totalGold = 0
+  var magic = 0
   //Public
   changeGold = function(dGold){
     gold += dGold
+    if (dGold > 0) {
+      totalGold += dGold
+    }
   }
   buy = function(amount) {
     if (amount <= gameState.getGold()) {
@@ -67,12 +85,23 @@ gameState = function(){
     return false
   }
   getGps = function() {
-    return Building.getBaseGps()
+    return Building.getBaseGps() * (1 + (magic / 100))
   }
-  getGold = function(){
+  getGold = function() {
     return Math.floor(gold)
   }
-  return {changeGold,buy,getGps,getGold}
+  getMagic = function() {
+    return magic
+  }
+  calcMagic = function() {
+    return Math.floor(Math.pow(totalGold / 100000000, 1/3))
+  }
+  sellAll = function() {
+    Building.restart()
+    magic = gameState.calcMagic()
+    gold = 0
+  }
+  return {changeGold,buy,getGps,getGold,calcMagic,getMagic,sellAll}
 }()
  
 var Render = {
@@ -85,6 +114,7 @@ var Render = {
   tick: function() {
     Render.updateGold()
     Render.updateBuilding()
+    Render.updateMagic()
   },
   updateGold: function() {
     Render.changeText("gold", Render.formatNum(gameState.getGold()) + " gold")
@@ -96,15 +126,21 @@ var Render = {
       Render.changeText("buildingPrice" + i, Render.formatNum(Building.buildings[i].getPrice()))
     }
   },
+  updateMagic: function() {
+    Render.changeText("magic", Render.formatNum(gameState.getMagic()) + " magic nuggets")
+    Render.changeText("sellAll", "Sell All For: " + Render.formatNum(gameState.calcMagic() - gameState.getMagic()) + " magic nuggets")
+  },
   formatNum: function(num) {
     var exp = ["M","B","T","q","Q","s","S","O","N","d","U","D"]
     if (num < 1000) {
       return num
     }
     else if (num < 1000000) {
+      var num = Math.round(num)
       return Math.floor(num / 1000)+ "," + Math.floor(num / 100) % 10 + Math.floor(num / 10) % 10 + num % 10
     }
     else {
+      var num = Math.round(num)
       var pow = Math.pow(1000, Math.floor(Math.log10(num) / 3))
       return Math.floor(num / pow) + "." + Math.floor(num * 10 / pow) % 10 + Math.floor(num * 100 / pow) % 10 + Math.floor(num * 1000 / pow) % 10 + " " + exp[Math.floor(Math.log10(num) / 3) - 2]
     }
@@ -116,6 +152,10 @@ var Render = {
 
 get("mainButton").onclick = function(){
   gameState.changeGold(1)
+}
+
+get("sellAll").onclick = function() {
+  gameState.sellAll()
 }
 
 Game.loop = setInterval(Game.tick, 1000 / Game.TICK_RATE)
