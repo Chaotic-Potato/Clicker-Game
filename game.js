@@ -6,6 +6,8 @@ var Game = {
   PRICE_EXP: 1.1,
   buyAmount: 1,
   ticks: 0,
+  lastTick: new Date().getTime(),
+  lastAutoSave: new Date().getTime(),
   tick: function() {
    Game.goldTick()
    Render.tick()
@@ -13,7 +15,8 @@ var Game = {
    Game.ticks++
   },
   goldTick: function() {
-    gameState.changeGold(gameState.getGps() / Game.TICK_RATE)
+    gameState.changeGold(gameState.getGps() * (new Date().getTime() - Game.lastTick) / 1000)
+    Game.lastTick = new Date().getTime()
   },
   getBuyAmount: function() {
     return Game.buyAmount
@@ -22,8 +25,9 @@ var Game = {
     Game.buyAmount = a
   },
   checkSave: function() {
-    if (Game.ticks % (Game.TICK_RATE * Game.AUTO_SAVE) == 0) {
+    if (new Date().getTime() - Game.lastAutoSave > Game.AUTO_SAVE * 1000) {
       Game.encode()
+      Game.lastAutoSave = new Date().getTime()
     }
   },
   restart: function() {
@@ -145,7 +149,7 @@ gameState = function(){
     return totalGold
   }
   calcMagic = function() {
-    return Math.floor(Math.pow(totalGold / 1000000, 1/2))
+    return Math.floor(Math.pow(totalGold / 1000000, 1/3))
   }
   sellAll = function() {
     Building.restart()
