@@ -1,23 +1,30 @@
 * {
 	font-family: "Courier New", sans-serif;
+	color: #065C27;
+}
+
+body {
+	background-image: url("Images/background.jpg");
+	background-size: cover;
 }
 
 #gold {
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 48px;
 }
 
 th {
 	border: 1px solid black;
 	margin: 0px;
 	padding: 0px;
-	text-align: left;
+	text-align: right;
 }
 
 table {
 	border: 1px solid black;
 	position: absolute;
 	right: 0px;
+	background-color: #4E9455;
 }
 
 #buyButtons {
@@ -37,11 +44,24 @@ table {
 th > button {
 	width: 100%;
 	border: 0px;
-	background-color: white;
 	font-weight: bold; 
+	opacity: 0.6;
+	border-radius: 0px;
 }
 
 #stats {
 	text-align: center;
 	border-radius: 5px;
+}
+
+button {
+	color: black;
+	border-radius: 5px;
+	background-color: #A4BD99;
+	border: 1px solid;
+	border-color: #065C27;
+}
+
+.center {
+	text-align: center;
 }

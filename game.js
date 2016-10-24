@@ -26,14 +26,20 @@ var Game = {
   },
   checkSave: function() {
     if (new Date().getTime() - Game.lastAutoSave > Game.AUTO_SAVE * 1000) {
-      Game.encode()
+      Game.save()
       Game.lastAutoSave = new Date().getTime()
     }
   },
   restart: function() {
     Building.restart()
     gameState.restart()
-    Game.encode()
+    Game.save()
+  },
+  save: function() {
+    document.cookie = "c=" + Game.encode() + "; expires=Tue, 1 Jan 2030 00:00:00 UTC"
+  },
+  exportPrompt: function() {
+    alert("Save Data: " + Game.encode())
   },
   encode: function() {
     var c = ""
@@ -41,11 +47,17 @@ var Game = {
     for (i in Building.buildings) {
       c += Building.buildings[i].amount + ","
     }
-    document.cookie = "c=" + btoa(c) + "; expires=Tue, 1 Jan 2030 00:00:00 UTC"
+   return btoa(c)
   },
-  decode: function() {
-    if (document.cookie != "") {
-      var c = atob(document.cookie.split(";")[0].split("c=")[1])
+  load: function() {
+    Game.decode(document.cookie.split("c=")[1].split(";")[0])
+  },
+  importPrompt() {
+    Game.decode(prompt("Enter Save Data: "))
+  },
+  decode: function(inp) {
+    if (inp != "") {
+      var c = atob(inp)
       var g = c.split("*")[0].split(",")
       var b = c.split("*")[1].split(",")
       gameState.cookie(g)
@@ -148,8 +160,9 @@ gameState = function(){
   getTotalGold = function() {
     return totalGold
   }
-  calcMagic = function() {
-    return Math.floor(Math.pow(totalGold / 1000000, 1/3))
+  calcMagic = function(frac = false) {
+    var newMag = Math.pow(totalGold / 1000000, 1/3)
+    return (frac ? newMag % 1 : Math.floor(newMag))
   }
   sellAll = function() {
     Building.restart()
@@ -194,6 +207,7 @@ var Render = {
   },
   updateMagic: function() {
     Render.changeText("magic", Render.formatNum(gameState.getMagic()) + " magic nuggets")
+    Render.changeText("magicProg", Math.floor(gameState.calcMagic(true) * 100) + "% towards next magic nugget")
     Render.changeText("sellAll", "Sell All For: " + Render.formatNum(gameState.calcMagic() - gameState.getMagic()) + " magic nuggets")
   },
   updateBuyAmount: function() {
@@ -233,6 +247,6 @@ get("sellAll").onclick = function() {
 }
 
 Game.loop = setInterval(Game.tick, 1000 / Game.TICK_RATE)
-Game.decode()
+Game.load()
 
 Render.init()

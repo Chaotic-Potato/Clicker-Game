@@ -10,8 +10,16 @@
 		<span id="magic">0 magic nuggets</span><br>
 		<button id="mainButton">Gold Nugget</button><br><br>
 	</div>
-	<button id="sellAll">Sell All For: 0 magic nuggets</button><br><br>
-        <button onclick="Game.encode()">Save</button><br>
+	<div id="options">
+		<button onclick="Game.save()">Save</button><br>
+		<button onclick="Game.load()">Load</button><br><br>
+		<button onclick="Game.exportPrompt()">Export</button><br>
+		<button onclick="Game.importPrompt()">Import</button><br><br>
+		<span id="magicProg">0% towards next magic nugget</span><br>
+		<button id="sellAll">Sell All For: 0 magic nuggets</button><br><br>
+		<button onclick="Game.restart()">Restart</button>
+	</div>
+
 	<span id="buyAmount">Buy Amount: 1</span>
 	<table id="buyOptions">
 		<tr>
@@ -24,12 +32,11 @@
 	</table>
 	<table id="buyButtons">
 		<tr>
-			<th><span>Buy</span></th>
-			<th><span>Amount</span></th>
-			<th><span>Cost</span></th>
+			<th class="center"><span>Buy</span></th>
+			<th class="center"><span>Amount</span></th>
+			<th class="center"><span>Cost</span></th>
 		</tr>
 	</table>
-        <button onclick="Game.restart()">Restart</button>
 	<script src="game.js"></script>
   </body>
 </html>
